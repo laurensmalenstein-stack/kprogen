@@ -60,7 +60,7 @@ Respond ONLY with a single valid JSON object. No markdown, no backticks, no expl
 {"flavorTags":["tag1","tag2","tag3","tag4"],"flavorDesc":"2-3 sentences in Dutch describing the expected flavor","klSettings":{"Profielniveau":"3 (medium)","Laadtemperatuur":"170C","First crack verwacht":"rond 8:20 min","Development na FC":"2:10 min","Batchgrootte":"100g aanbevolen"},"tips":"3-4 sentences of roasting tips in Dutch","dryingPhase":{"duration":"3 min 30s","tempRange":"150-175C","pct":30},"maillardPhase":{"duration":"5 min","tempRange":"175-203C","pct":45},"devPhase":{"duration":"2 min 10s","tempRange":"203-213C","pct":22}}`;
 
   const requestBody = JSON.stringify({
-    model: 'claude-3-5-sonnet-20241022',
+    model: 'claude-haiku-4-5-20251001',
     max_tokens: 1024,
     messages: [{ role: 'user', content: prompt }]
   });
