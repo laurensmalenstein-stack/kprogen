@@ -11,7 +11,14 @@ module.exports = async function handler(req, res) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return res.status(500).json({ error: 'API key not configured' });
 
-  const { origin, process: processing, altitude, roastLevel, roastName, brew, flavors, notes, endTemp, totalTime, devPercent } = req.body;
+  // Parse body - Vercel may pass it as string or object
+  let data = req.body;
+  if (typeof data === 'string') {
+    try { data = JSON.parse(data); } catch(e) { return res.status(400).json({ error: 'Invalid JSON body' }); }
+  }
+  if (!data) return res.status(400).json({ error: 'Empty body' });
+
+  const { origin, process: processing, altitude, roastLevel, roastName, brew, flavors, notes, endTemp, totalTime, devPercent } = data;
 
   const prompt = `You are an expert coffee roaster specializing in Kaffelogic home roaster profiles. Generate a roast profile analysis for:
 Origin: ${origin}, Processing: ${processing}, Altitude: ${altitude} masl, Roast level: ${roastName}, Brew: ${brew}
@@ -39,18 +46,18 @@ Respond ONLY with valid JSON, no markdown, no backticks:
         'Content-Length': Buffer.byteLength(body)
       }
     }, (response) => {
-      let data = '';
-      response.on('data', chunk => data += chunk);
+      let raw = '';
+      response.on('data', chunk => raw += chunk);
       response.on('end', () => {
         try {
-          const parsed = JSON.parse(data);
+          const parsed = JSON.parse(raw);
           if (parsed.error) { res.status(500).json({ error: parsed.error.message }); return resolve(); }
           const text = parsed.content.map(i => i.text || '').join('');
           const result = JSON.parse(text.replace(/```json|```/g, '').trim());
           res.status(200).json(result);
           resolve();
         } catch (e) {
-          res.status(500).json({ error: 'Parse error: ' + e.message + ' | Raw: ' + data.substring(0, 200) });
+          res.status(500).json({ error: 'Parse error: ' + e.message, raw: raw.substring(0, 300) });
           resolve();
         }
       });
