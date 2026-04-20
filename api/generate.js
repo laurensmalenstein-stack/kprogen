@@ -22,7 +22,7 @@ Respond ONLY with valid JSON, no markdown, no backticks:
 {"flavorTags":["tag1","tag2","tag3","tag4"],"flavorDesc":"2-3 sentences in Dutch","klSettings":{"Profielniveau":"value","Laadtemperatuur":"value","First crack verwacht":"value","Development na FC":"value","Batchgrootte":"value"},"tips":"3-4 sentences in Dutch","dryingPhase":{"duration":"X min","tempRange":"X-X C","pct":30},"maillardPhase":{"duration":"X min","tempRange":"X-X C","pct":45},"devPhase":{"duration":"X min","tempRange":"X-X C","pct":22}}`;
 
   const body = JSON.stringify({
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-3-5-sonnet-20241022',
     max_tokens: 1000,
     messages: [{ role: 'user', content: prompt }]
   });
